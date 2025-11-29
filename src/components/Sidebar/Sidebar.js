@@ -11,13 +11,8 @@ export default function Sidebar({ setChat, closeMenu }) {
     const { mode, setMode } = useContext(ThemeContext)
     const isMobile = useMediaQuery('(max-width:800px)')
 
-    const handleMode = () => {
-        setMode(prev => prev === 'light' ? 'dark' : 'light')
-    }
-
     return (
-        <Box >
-
+        <Box>
 
             {isMobile && (
                 <Button
@@ -25,9 +20,9 @@ export default function Sidebar({ setChat, closeMenu }) {
                     sx={{
                         width: 1,
                         justifyContent: 'flex-end',
-                        color: mode == 'light' ? 'primary.dark' : 'text.primary'
+                        color: mode === 'light' ? 'primary.dark' : 'text.primary'
                     }}
-                    onClick={closeMenu}
+                    onClick={() => closeMenu && closeMenu()}  
                 >
                     Close
                 </Button>
@@ -39,12 +34,9 @@ export default function Sidebar({ setChat, closeMenu }) {
                         setChat([])
                         closeMenu && closeMenu()
                     }}
-
                     sx={{
                         bgcolor: 'primary.main',
-                        '&:hover ': {
-                            bgcolor: 'primary.bg'
-                        }
+                        '&:hover ': { bgcolor: 'primary.bg' }
                     }}
                     direction={'row'}
                     spacing={1}
@@ -73,7 +65,6 @@ export default function Sidebar({ setChat, closeMenu }) {
                     </Stack>
 
                     <AddCommentIcon sx={{ color: 'text.primary' }} />
-
                 </Stack>
             </Link>
 
@@ -82,7 +73,7 @@ export default function Sidebar({ setChat, closeMenu }) {
                     <Button
                         variant="contained"
                         sx={{ width: 1 }}
-                        onClick={() => closeMenu && closeMenu()} 
+                        onClick={() => closeMenu && closeMenu()}
                     >
                         Past Conversations
                     </Button>
