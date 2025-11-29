@@ -37,8 +37,9 @@ export default function Sidebar({ setChat, closeMenu }) {
                 <Stack
                     onClick={() => {
                         setChat([])
-                        closeMenu()
+                        closeMenu && closeMenu()
                     }}
+
                     sx={{
                         bgcolor: 'primary.main',
                         '&:hover ': {
@@ -79,8 +80,9 @@ export default function Sidebar({ setChat, closeMenu }) {
             <Box p={{ xs: 2, md: 3 }}>
                 <Link to={'/history'}>
                     <Button
-                        variant="contained" sx={{ width: 1 }}
-                        onClick={closeMenu}
+                        variant="contained"
+                        sx={{ width: 1 }}
+                        onClick={() => closeMenu && closeMenu()} 
                     >
                         Past Conversations
                     </Button>
