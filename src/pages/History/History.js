@@ -10,12 +10,25 @@ export default function History() {
     const [filteredChats, setFilteredChats] = useState([])
 
     useEffect(() => {
-        const localChats = localStorage.getItem('chat') || []
-        if (localChats.length > 0) {
-            setChats(JSON.parse(localChats))
-            setFilteredChats(JSON.parse(localChats))
+        const stored = localStorage.getItem("chat");
+
+        if (!stored) {
+            setChats([]);
+            setFilteredChats([]);
+            return;
         }
-    }, [])
+
+        try {
+            const parsed = JSON.parse(stored);
+            setChats(parsed);
+            setFilteredChats(parsed);
+        } catch (e) {
+            console.error("Invalid chat data in localStorage", e);
+            setChats([]);
+            setFilteredChats([]);
+        }
+    }, []);
+
 
     return (
         <Box
