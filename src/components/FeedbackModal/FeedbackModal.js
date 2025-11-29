@@ -1,49 +1,91 @@
-import { Box, Typography, Stack, IconButton } from '@mui/material'
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { styled } from '@mui/material/styles';
+import { Box, Stack, Typography, Modal, IconButton, TextField, Button } from '@mui/material'
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import CloseIcon from '@mui/icons-material/Close';
+import { useState } from 'react';
 
-export default function Card({ heading, subtext, handleClick }) {
+export default function FeedbackModal({ open, handleClose, chatId, updateChat }) {
+
+    const [input, setInput] = useState('')
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '95%',
+        bgcolor: 'primary.bgtheme',
+        boxShadow: 24,
+        p: { xs: 2, md: 3 },
+        maxWidth: 720,
+        borderRadius: '10px'
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        updateChat(prev => (
+            prev.map(item => {
+                if (item.id == chatId) {
+                    return { ...item, feedback: input }
+                }
+                else {
+                    return { ...item }
+                }
+            })
+        ))
+
+        setInput('')
+
+        handleClose()
+    }
 
     return (
-        <Stack
-            bgcolor={'primary.light'}
-            p={{ xs: 1.2, md: 3 }}
-            borderRadius={1}
-            boxShadow={'0 0 12px rgba(0,0,0,0.1)'}
-            direction={'row'}
-            spacing={1}
-            alignItems={'center'}
-            justifyContent={'space-between'}
-            sx={{
-                '&:hover .MuiIconButton-root': {
-                    opacity: 1
-                },
-                cursor: 'pointer',
-                '&:hover': {
-                    bgcolor: 'primary.bglight'
-                },
-                transition: 'background 200ms ease'
-            }}
-            onClick={() => handleClick(heading)}
+        <Modal
+            open={open}
+            onClose={handleClose}
         >
-            <Box>
-                <Typography
-                    variant='heading'
-                    fontWeight={700}
-                    fontSize={{ xs: 14, md: 20 }}
+            <Box sx={style}>
+
+                <Stack direction={'row'} spacing={2} alignItems={'center'} justifyContent={'space-between'}>
+                    <Stack direction={'row'} spacing={{ xs: .5, md: 2 }} alignItems={'center'}>
+                        <FeedbackIcon />
+                        <Typography variant={'heading'} fontSize={{ xs: 14, md: 18 }}>
+                            Provide Additional Feedback
+                        </Typography>
+                    </Stack>
+
+                    <IconButton onClick={handleClose} >
+                        <CloseIcon />
+                    </IconButton>
+                </Stack>
+
+                <Box
+                    component='form'
+                    pt={3}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: "flex-end",
+                        gap: '12px'
+                    }}
+                    onSubmit={handleSubmit}
                 >
-                    {heading}
-                </Typography>
-                <Typography
-                    color={'text.secondary'}
-                    fontSize={{ xs: 10, md: 16 }}
-                >
-                    {subtext}
-                </Typography>
+                    <TextField
+                        multiline
+                        rows={6}
+                        sx={{ width: 1 }}
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        required
+                    />
+                    <Button
+                        variant='contained'
+                        type='submit'
+                    >
+                        Submit
+                    </Button>
+                </Box>
             </Box>
-            <IconButton size='small' sx={{ opacity: 0, bgcolor: 'primary.bglight', transition: 'opacity 400ms ease' }}>
-                <ArrowUpwardIcon fontSize='inherit' />
-            </IconButton>
-        </Stack>
+        </Modal>
     )
 }

@@ -1,5 +1,5 @@
 import { Box, Select, MenuItem, Typography } from '@mui/material'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function ChatFilter({ allChats, filterChats }) {
 
@@ -9,34 +9,52 @@ export default function ChatFilter({ allChats, filterChats }) {
         setOption(e.target.value)
     }
 
+    // FILTER CHATS
     useEffect(() => {
-        if (option === 'All Ratings') {
+
+        if (option == 'All Ratings') {
             filterChats(allChats)
-        } else {
-            const filtered = allChats.filter(item =>
-                item.chat.some(ch => ch.rating == option)
-            )
+        }
+        else {
+            const filtered = allChats.filter(item => {
+
+                let found = false
+
+                item.chat.forEach(ch => {
+                    if (ch.rating == option) {
+                        found = true
+                    }
+                })
+
+                return found
+            })
+
             filterChats(filtered)
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [option, allChats])
-
+    }, [option])
 
     return (
-        <Box mb={3}>
-            <Typography fontSize={12} mb={0.5}>Filter by rating</Typography>
-
+        <Box
+            mb={3}
+        >
+            <Typography fontSize={12} mb={0.5}>
+                Filter by rating
+            </Typography>
             <Select
                 value={option}
                 onChange={handleChange}
-                size="small"
-                sx={{ minWidth: { xs: '100%', md: 160 } }}
+                size='small'
+                sx={{
+                    minWidth: { xs: 1, md: 160 },
+                }}
             >
-                <MenuItem value="All Ratings">All Ratings</MenuItem>
-                {[1, 2, 3, 4, 5].map(r => (
-                    <MenuItem key={r} value={r}>{r} Star{r > 1 ? 's' : ''}</MenuItem>
-                ))}
+                <MenuItem value='All Ratings'>All Ratings</MenuItem>
+                <MenuItem value={1}>1 Star</MenuItem>
+                <MenuItem value={2}>2 Stars</MenuItem>
+                <MenuItem value={3}>3 Stars</MenuItem>
+                <MenuItem value={4}>4 Stars</MenuItem>
+                <MenuItem value={5}>5 Stars</MenuItem>
             </Select>
         </Box>
     )
